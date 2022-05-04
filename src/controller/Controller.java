@@ -21,21 +21,27 @@ import model.Name;
 public class Controller {
 	private DBConn derby = new DBConn();
 	
-	public void addStudent(ArrayList<Student> students, String id, String name, String middleI, String lastName, String dob) {
+	public void addStudent(String id, String name, String middleI, String lastName, String dob) {
 		
 		Name nameObj = new Name(name, middleI, lastName);
 		
 		Student student = new Student(id, nameObj, dob);
-		
-		derby.add_student(student);
-		
-		// Refresh arraylist
-		students.clear();
-		students.addAll(derby.select_students());
+				
+		derby.addStudent(student);
 	}
 	
-	public void removeStudent(ArrayList<Student> students, String index) {
-		students.remove(Integer.parseInt(index));
+	/**
+	 * Get all students
+	 * @param students
+	 * @param index
+	 */
+	
+	public ArrayList<Student> getAllStudents() {
+		return derby.select_students();
+	}
+	
+	public void removeStudent(String studentId) {
+		derby.deleteStudent(studentId);
 	}
 	
 	public void save(ArrayList<Student> students) {
@@ -49,14 +55,10 @@ public class Controller {
 	    }
 	}
 	
-	public void registerMark(String studentName, ArrayList<Student> students, String moduleName, int grade) {
+	public void registerMark(String studentId, String moduleName, int grade) {
 		StudentModule module = new StudentModule(moduleName, grade);
-		for (int i = 0; i < students.size(); i++) {
-			if (students.get(i).getName().getName() == studentName) {
-				students.get(i).getModules().add(module);
-				break;
-			}
-		}
+						
+		derby.addStudentModule(studentId, module);
 	}
 	
 	public boolean fileExists() {
@@ -64,13 +66,7 @@ public class Controller {
 		return f.exists() && !f.isDirectory();
 	}
 	
-	public ArrayList<StudentModule> findModulesForUser(ArrayList<Student> students, String studentName) {
-		for (int i = 0; i < students.size(); i++) {
-			if (students.get(i).getName().getName() == studentName) {
-				return students.get(i).getModules();
-			}
-		}
-		
-		return new ArrayList<StudentModule>() ;
+	public ArrayList<StudentModule> findModulesForUser(String studentId) {
+		return derby.selectStudentModules(studentId);
 	}
 }

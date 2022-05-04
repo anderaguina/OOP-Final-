@@ -43,7 +43,7 @@ public class TabbedView {
 			fillTab3 = new Tab3(tab3, students, primaryStage);
 			
 			// Fill tab 1 (Goes third so I can use fillTab2 and fillTab3)
-			fillTab1 = new Tab1(tab1, fillTab2, fillTab3, students, primaryStage);			
+			fillTab1 = new Tab1(tab1, fillTab2, fillTab3, primaryStage);			
 			
 			
 			// Add tabs to tab pane

@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
@@ -18,10 +19,12 @@ import model.Student;
 public class Tab1 {
 	
 	private Controller controller = new Controller();
+	protected ChoiceBox<String> choiceBox = new ChoiceBox<>();
+	private ArrayList<Student> students = controller.getAllStudents();
 	
 	// I get tab2 and tab3 object in order to update the choice box in those classes when
 	// a new student is added from this view.
-	public Tab1(Tab tab1, Tab2 tab2, Tab3 tab3, ArrayList<Student> students, Stage primaryStage) {
+	public Tab1(Tab tab1, Tab2 tab2, Tab3 tab3, Stage primaryStage) {
 		
 		// Text field + labels
 		Label nameLabel = new Label("Name:");
@@ -39,8 +42,14 @@ public class Tab1 {
 		Label dobLabel = new Label("Date Of Birth:");
 		TextField dobTextField = new TextField();
 		
-		Label indexOfUserToRemoveLabel = new Label("Index of User To Remove:");
-		TextField indexOfUserToRemoveTextField = new TextField();
+		if (students.size() > 0) {
+			choiceBox.setValue(students.get(0).getId());	
+		}
+		
+		for (int i = 0; i < students.size(); i++) {
+			choiceBox.getItems().add(students.get(i).getId());
+		}
+		
 		
 		Button addButton = new Button("Add");
 		Button removeButton = new Button("Remove");
@@ -58,7 +67,6 @@ public class Tab1 {
 			@Override
 			public void handle(ActionEvent event) {
 				
-				System.out.println("LENGTH BEFORE => "+ students.size());
 				String id = idTextField.getText();
 				String firstName = nameTextField.getText();
 				String middleI = middleITextField.getText();
@@ -66,9 +74,8 @@ public class Tab1 {
 				String dob = dobTextField.getText();
 				
 				// Add student to db
-				controller.addStudent(students, id, firstName, middleI, lastName, dob);
+				controller.addStudent(id, firstName, middleI, lastName, dob);
 				
-				System.out.println("LENGTH AFTER => "+ students.size());
 				
 				// Clear text Fields
 				idTextField.clear();
@@ -76,11 +83,12 @@ public class Tab1 {
 				dobTextField.clear();
 				
 				// Auto update when the student is added
-				updateTextArea(textArea, students);
+				updateTextArea(textArea, controller.getAllStudents());
 				
 				// Reset choiceBox values
-				tab2.updateChoiceBox(students);
-				tab3.updateChoiceBox(students);
+				updateChoiceBox();
+				tab2.updateChoiceBox();
+				tab3.updateChoiceBox();
 			}
 			
 		});
@@ -100,15 +108,18 @@ public class Tab1 {
 
 			@Override
 			public void handle(ActionEvent event) {
-				System.out.println("LENGTH BEFORE => "+ students.size());
-				controller.removeStudent(students, indexOfUserToRemoveTextField.getText());
-				updateTextArea(textArea, students);
-				System.out.println("LENGTH AFTER => "+ students.size());
+				String studentId = getChoice(choiceBox);
+				controller.removeStudent(studentId);
+				updateChoiceBox();
+				tab2.updateChoiceBox();
+				tab3.updateChoiceBox();
+				
+				updateTextArea(textArea, controller.getAllStudents());
 			}
 			
 		});
 		
-		// Add events to buttons: REMOVE
+		// Add events to buttons: SAVE
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -153,8 +164,7 @@ public class Tab1 {
     		dobLabel,
     		dobTextField,
     		addButton,
-    		indexOfUserToRemoveLabel,
-    		indexOfUserToRemoveTextField,
+    		choiceBox,
     		removeButton,
     		listButton,
     		textArea,
@@ -174,4 +184,21 @@ public class Tab1 {
 		}
 		textArea.setText(fieldContent.toString());
 	}
+	
+	private String getChoice(ChoiceBox<String> choiceBox) {
+		String studentId = choiceBox.getValue();
+		return studentId;
+	}
+	
+	public void updateChoiceBox() {
+		ArrayList<Student> students = controller.getAllStudents();
+		choiceBox.getItems().clear();
+		for (int i = 0; i < students.size(); i++) {
+			choiceBox.getItems().add(students.get(i).getId());
+		}
+		if (students.size() > 0) {
+			choiceBox.setValue(students.get(0).getId());	
+		}
+	}
+	
 }

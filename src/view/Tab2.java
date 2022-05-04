@@ -23,7 +23,7 @@ public class Tab2 {
 		VBox tab2VBox = new VBox();
 				
 		if (students.size() > 0) {
-			choiceBox.setValue(students.get(0).getName().getName());	
+			choiceBox.setValue(students.get(0).getId());	
 		}
 		
 		Label moduleNameLabel = new Label("Module Name:");
@@ -35,17 +35,19 @@ public class Tab2 {
 		
 		
 		for (int i = 0; i < students.size(); i++) {
-			choiceBox.getItems().add(students.get(i).getName().getName());
+			choiceBox.getItems().add(students.get(i).getId());
 		}
 		
 		Button registerMarkButton = new Button("Register Mark");
 		
 		registerMarkButton.setOnAction(e -> {
-			String studentName = getChoice(choiceBox);
+			String studentId = getChoice(choiceBox);
 			String module = moduleNameTextField.getText();
 			int grade = Integer.parseInt(gradeTextField.getText());
-			controller.registerMark(studentName, students, module, grade);
-			System.out.println(studentName);
+			
+			
+			controller.registerMark(studentId, module, grade);
+			System.out.println(studentId);
 		});
 	    
 	    tab2VBox.getChildren().addAll(
@@ -62,17 +64,20 @@ public class Tab2 {
 	}
 	
 	private String getChoice(ChoiceBox<String> choiceBox) {
-		String studentName = choiceBox.getValue();
-		return studentName;
+		String studentId = choiceBox.getValue();
+		return studentId;
 	}
 	
-	public void updateChoiceBox(ArrayList<Student> students) {
+	public void updateChoiceBox() {
+		
+		ArrayList<Student> students = controller.getAllStudents();
+		
 		choiceBox.getItems().clear();
 		for (int i = 0; i < students.size(); i++) {
-			choiceBox.getItems().add(students.get(i).getName().getName());
+			choiceBox.getItems().add(students.get(i).getId());
 		}
 		if (students.size() > 0) {
-			choiceBox.setValue(students.get(0).getName().getName());	
+			choiceBox.setValue(students.get(0).getId());	
 		}
 	}
 }

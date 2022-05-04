@@ -44,24 +44,18 @@ public class Tab3 {
 		
 		requestRecordsButton.setOnAction(e -> {
 			System.out.println("Event called");
-			String studentName = getChoice(choiceBox);
-            ArrayList<StudentModule> modules = controller.findModulesForUser(students, studentName);
+			String studentId = getChoice(choiceBox);
+            ArrayList<StudentModule> modules = controller.findModulesForUser(studentId);
             renderRecordsInTable(table, modules);
 		});
-	    
 		
 		if (students.size() > 0) {
-			choiceBox.setValue(students.get(0).getName().getName());
-			
-			// Fill text area with selected user information
-			ArrayList<StudentModule> modules = controller.findModulesForUser(students, students.get(0).getName().getName());
-            
-		}		
-		
+			choiceBox.setValue(students.get(0).getId());	
+		}
 		
 		for (int i = 0; i < students.size(); i++) {
 			System.out.println("Students size => " + students.size());
-			choiceBox.getItems().add(students.get(i).getName().getName());
+			choiceBox.getItems().add(students.get(i).getId());
 		}	
 		
 	    tab3VBox.getChildren().addAll(
@@ -75,21 +69,22 @@ public class Tab3 {
 	}
 	
 	private String getChoice(ChoiceBox<String> choiceBox) {
-		String studentName = choiceBox.getValue();
-		return studentName;
+		String studentId = choiceBox.getValue();
+		return studentId;
 	}
 	
 	public void updateTextArea(TextArea textArea,  String records) {
 		textArea.setText(records);	
 	}
 
-	public void updateChoiceBox(ArrayList<Student> students) {
+	public void updateChoiceBox() {
+		ArrayList<Student> students = controller.getAllStudents();
 		choiceBox.getItems().clear();
 		for (int i = 0; i < students.size(); i++) {
-			choiceBox.getItems().add(students.get(i).getName().getName());
+			choiceBox.getItems().add(students.get(i).getId());
 		}
 		if (students.size() > 0) {
-			choiceBox.setValue(students.get(0).getName().getName());	
+			choiceBox.setValue(students.get(0).getId());	
 		}
 	}
 	

@@ -23,11 +23,14 @@ public class Tab3 {
 	
 	public Tab3(Tab tab3, ArrayList<Student> students, Stage primaryStage) {
 		
+		// Create vBox
 		VBox tab3VBox = new VBox();		
 		
-		// Create table
+		/*
+		 * Create table
+		 */
 		TableView table = new TableView<StudentModule>();
-		// TableColumn idColumn = new TableColumn<Student, String>("Id");
+		
 		TableColumn nameColumn = new TableColumn<StudentModule, String>("Module Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("module"));
 		
@@ -39,25 +42,32 @@ public class Tab3 {
 		
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
-				
+		
+		// Add action button and functionality
 		Button requestRecordsButton = new Button("Request Records");
 		
 		requestRecordsButton.setOnAction(e -> {
-			System.out.println("Event called");
+			// Get inputs from view
 			String studentId = getChoice(choiceBox);
-            ArrayList<StudentModule> modules = controller.findModulesForUser(studentId);
+			
+			// Get modules from db for given student
+            ArrayList<StudentModule> modules = controller.findModulesForUser(studentId, false);
+            
+            // Render the record results in the view table
             renderRecordsInTable(table, modules);
 		});
 		
+		// Set combobox default value
 		if (students.size() > 0) {
 			choiceBox.setValue(students.get(0).getId());	
 		}
 		
+		// Fill combobox list
 		for (int i = 0; i < students.size(); i++) {
-			System.out.println("Students size => " + students.size());
 			choiceBox.getItems().add(students.get(i).getId());
-		}	
+		}
 		
+		// Add elements to vBox
 	    tab3VBox.getChildren().addAll(
 	    	choiceBox,
 	    	requestRecordsButton,
@@ -68,15 +78,19 @@ public class Tab3 {
 		
 	}
 	
+	/**
+	 * Get choice from combobox
+	 * @param choiceBox
+	 * @return
+	 */
 	private String getChoice(ChoiceBox<String> choiceBox) {
 		String studentId = choiceBox.getValue();
 		return studentId;
 	}
-	
-	public void updateTextArea(TextArea textArea,  String records) {
-		textArea.setText(records);	
-	}
 
+	/**
+	 * Update comboBox when new student is added
+	 */
 	public void updateChoiceBox() {
 		ArrayList<Student> students = controller.getAllStudents();
 		choiceBox.getItems().clear();
@@ -88,6 +102,11 @@ public class Tab3 {
 		}
 	}
 	
+	/**
+	 * Update content of view table
+	 * @param table
+	 * @param modules
+	 */
 	private void renderRecordsInTable(TableView table, ArrayList<StudentModule> modules) {
 		table.getItems().clear();
 		for (int i = 0; i < modules.size(); i++) {

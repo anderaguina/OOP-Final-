@@ -14,6 +14,7 @@ import model.Name;
 
 public class DBConn {	
 	
+	// Method to return a connection to the derby db (used only by the methods that will access the db)
 	private Connection connectToDerbyDb(String url) {
 		Connection conn;
 		try {
@@ -35,10 +36,12 @@ public class DBConn {
 		ResultSet res;
 		
 		try {
+			// Open connection to derby
 			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
 			
 			Statement sta = conn.createStatement();
 			
+			// Define query
 			String query = "SELECT * FROM Students";
 			
 			res = sta.executeQuery(query);
@@ -74,10 +77,12 @@ public class DBConn {
 		ResultSet res;
 		
 		try {
+			// Open connection to derby
 			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
 			
 			Statement sta = conn.createStatement();
 			
+			// Define query
 			String query = "SELECT * FROM Students where studentid='" + studentId + "'";
 			
 			res = sta.executeQuery(query);
@@ -107,10 +112,12 @@ public class DBConn {
 		ResultSet res;
 		
 		try {
+			// Open connection to derby
 			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
 			
 			Statement sta = conn.createStatement();
 			
+			// Define query
 			String query = "SELECT * FROM StudentModules where studentid='" + studentId + "'";
 			
 			res = sta.executeQuery(query);
@@ -131,6 +138,44 @@ public class DBConn {
 	}
 	
 	/**
+	 * Select modules where grade > 70%
+	 * @param studentId
+	 * @param honors
+	 * @return
+	 */
+	public ArrayList<StudentModule> selectStudentModulesHonors(String studentId, boolean honors) {
+		ArrayList<StudentModule> studentModules = new ArrayList<StudentModule>();
+		
+		ResultSet res;
+		
+		try {
+			// Open connection to derby
+			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
+			
+			Statement sta = conn.createStatement();
+			
+			// Define query
+			String query = "SELECT * FROM StudentModules where studentid='" + studentId + "' and grade > 70";
+			
+			res = sta.executeQuery(query);
+			
+			while (res.next()) {
+				StudentModule module = new StudentModule(res.getString("module"), res.getInt("grade"));
+				
+				studentModules.add(module);
+			}
+		     
+		    res.close();
+		} catch (SQLException ex) {
+			res = null;
+            ex.printStackTrace();
+        }
+		
+		return studentModules;
+	}
+	
+	
+	/**
 	 * Add students to db
 	 * @return
 	 */
@@ -139,12 +184,12 @@ public class DBConn {
 		// ResultSet res;
 		
 		try {
+			// Open connection to derby
 			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
 			
 			Statement sta = conn.createStatement();
 			
-			// String query = "INSERT INTO Students (STUDENTID, FIRSTNAME, MIDDLENAMEI, LASTNAME, DOB) VALUES"
-				//	+ " ('" + student.getId() +"', '"+ student.getName() +"', 'Aguinagalde', 'Aguinagalde', '19-01-1995')";
+			// Define query
 			String query = "INSERT INTO Students (STUDENTID, FIRSTNAME, MIDDLENAMEI, LASTNAME, DOB) VALUES"
 					+ "('"+ student.getId()+"', '"+ student.getName().getName() +"', '" + student.getName().getMiddleI() +"', '" + student.getName().getLastName() +"', '" +student.getDob() +"')";
 			
@@ -165,12 +210,12 @@ public class DBConn {
 		// ResultSet res;
 		
 		try {
+			// Open connection to derby
 			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
 			
 			Statement sta = conn.createStatement();
 			
-			// String query = "INSERT INTO Students (STUDENTID, FIRSTNAME, MIDDLENAMEI, LASTNAME, DOB) VALUES"
-				//	+ " ('" + student.getId() +"', '"+ student.getName() +"', 'Aguinagalde', 'Aguinagalde', '19-01-1995')";
+			// Define query
 			String query = "DELETE FROM STUDENTS WHERE STUDENTID = '" + studentId + "'";
 			
 			int insertedRows = sta.executeUpdate(query);
@@ -190,10 +235,12 @@ public class DBConn {
 		// ResultSet res;
 		
 		try {
+			// Open connection to derby
 			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
 			
 			Statement sta = conn.createStatement();
 
+			// Define query
 			String query = "INSERT INTO StudentModules (STUDENTID, MODULE, GRADE) VALUES"
 					+ "('"+ studentId+"', '"+ module.getModule() +"', " + module.getGrade() +")";
 			

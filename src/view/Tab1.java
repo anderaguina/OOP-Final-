@@ -22,11 +22,20 @@ public class Tab1 {
 	protected ChoiceBox<String> choiceBox = new ChoiceBox<>();
 	private ArrayList<Student> students = controller.getAllStudents();
 	
-	// I get tab2 and tab3 object in order to update the choice box in those classes when
+	// I get tab2, tab3 and tab4 object in order to update the choice box in those classes when
 	// a new student is added from this view.
-	public Tab1(Tab tab1, Tab2 tab2, Tab3 tab3, Stage primaryStage) {
+	public Tab1(Tab tab1, Tab2 tab2, Tab3 tab3, Tab4 tab4, Stage primaryStage) {
 		
-		// Text field + labels
+		/*
+		 * Section Tittles
+		 */
+		Label addSection = new Label("Add Student");
+		Label removeSection = new Label("Remove Student");
+		Label listSection = new Label("List Students");
+		
+		/*
+		 * Text field + labels
+		 */
 		Label nameLabel = new Label("Name:");
 		TextField nameTextField = new TextField();
 		
@@ -42,6 +51,9 @@ public class Tab1 {
 		Label dobLabel = new Label("Date Of Birth:");
 		TextField dobTextField = new TextField();
 		
+		/*
+		 * Set default value for comboBox and fill the list
+		 */
 		if (students.size() > 0) {
 			choiceBox.setValue(students.get(0).getId());	
 		}
@@ -51,11 +63,11 @@ public class Tab1 {
 		}
 		
 		
+		/*
+		 * Create buttons for the actions
+		 */
 		Button addButton = new Button("Add");
 		Button removeButton = new Button("Remove");
-		Button listButton = new Button("List");
-		Button saveButton = new Button("Save");
-		Button loadButton = new Button("Load");
 		Button exitButton = new Button("Exit");
 		
 		// Create text area to display entries
@@ -67,6 +79,7 @@ public class Tab1 {
 			@Override
 			public void handle(ActionEvent event) {
 				
+				// Get inputs from view
 				String id = idTextField.getText();
 				String firstName = nameTextField.getText();
 				String middleI = middleITextField.getText();
@@ -82,23 +95,14 @@ public class Tab1 {
 				nameTextField.clear();
 				dobTextField.clear();
 				
-				// Auto update when the student is added
+				// Auto update student list in text area when the student is added
 				updateTextArea(textArea, controller.getAllStudents());
 				
-				// Reset choiceBox values
+				// Reset choiceBox values in the whole app
 				updateChoiceBox();
 				tab2.updateChoiceBox();
 				tab3.updateChoiceBox();
-			}
-			
-		});
-		
-		// Add events to buttons: LIST
-		listButton.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				updateTextArea(textArea, students);
+				tab4.updateChoiceBox();
 			}
 			
 		});
@@ -108,23 +112,19 @@ public class Tab1 {
 
 			@Override
 			public void handle(ActionEvent event) {
+				
+				// Get inputs from view
 				String studentId = getChoice(choiceBox);
 				controller.removeStudent(studentId);
+				
+				// Reset choiceBox values in the whole app
 				updateChoiceBox();
 				tab2.updateChoiceBox();
 				tab3.updateChoiceBox();
+				tab4.updateChoiceBox();
 				
+				// Auto update student list in text area when the student is removed
 				updateTextArea(textArea, controller.getAllStudents());
-			}
-			
-		});
-		
-		// Add events to buttons: SAVE
-		saveButton.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				controller.save(students);
 			}
 			
 		});
@@ -134,12 +134,9 @@ public class Tab1 {
 
 			@Override
 			public void handle(ActionEvent event) {
-				boolean save = CloseBox.display("Exit", "Do you want to save before exiting?");
+				boolean exit = CloseBox.display("Exit", "Are you sure you want to quit?");
 				
-				if (save) {
-					controller.save(students);
-					primaryStage.close();
-				} else {
+				if (exit) {
 					primaryStage.close();
 				}
 			}
@@ -150,9 +147,13 @@ public class Tab1 {
 		// Fill the text area from db
 		updateTextArea(textArea, students);
 		
+		/*
+		 * Create vBox and add the children to it
+		 */
 	    VBox tab1VBox = new VBox();
 	    
 	    tab1VBox.getChildren().addAll(
+    		addSection,
 	    	nameLabel,
     		nameTextField,
     		middleILabel,
@@ -164,18 +165,23 @@ public class Tab1 {
     		dobLabel,
     		dobTextField,
     		addButton,
+    		removeSection,
     		choiceBox,
     		removeButton,
-    		listButton,
+    		listSection,
     		textArea,
-    		saveButton,
     		exitButton
 	    );
 		
 		tab1.setContent(tab1VBox);
 	}
 
-	
+
+	/**
+	 * Update content of text area
+	 * @param textArea
+	 * @param students
+	 */
 	public void updateTextArea(TextArea textArea,  ArrayList<Student> students) {
 		StringBuilder fieldContent = new StringBuilder(""); 
 		for (int i = 0; i < students.size(); i++) {
@@ -185,11 +191,19 @@ public class Tab1 {
 		textArea.setText(fieldContent.toString());
 	}
 	
+	/**
+	 * Get choice from combobox
+	 * @param choiceBox
+	 * @return
+	 */
 	private String getChoice(ChoiceBox<String> choiceBox) {
 		String studentId = choiceBox.getValue();
 		return studentId;
 	}
 	
+	/**
+	 * Update comboBox when new student is added
+	 */
 	public void updateChoiceBox() {
 		ArrayList<Student> students = controller.getAllStudents();
 		choiceBox.getItems().clear();

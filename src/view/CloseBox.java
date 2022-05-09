@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class CloseBox {
 
-	static boolean save;
+	static boolean exit;
 	
 	public static boolean display(String title, String message) {
 		Stage window = new Stage();
@@ -21,27 +21,27 @@ public class CloseBox {
 		label.setText(message);
 		
 		// Create buttons
-		Button saveButton = new Button("Save and Exit");
-		Button noSaveButton = new Button("Exit without saving");
+		Button exitButton = new Button("Yes, exit!");
+		Button noExitButton = new Button("No, cancel!");
 		
-		saveButton.setOnAction(e -> {
-			save = true;
+		exitButton.setOnAction(e -> {
+			exit = true;
 			window.close();
 		});
 		
-		noSaveButton.setOnAction(e -> {
-			save = false;
+		noExitButton.setOnAction(e -> {
+			exit = false;
 			window.close();
 		});
 		
 		VBox layout = new VBox(10);
-		layout.getChildren().addAll(label, saveButton, noSaveButton);
+		layout.getChildren().addAll(label, exitButton, noExitButton);
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		window.setScene(scene);
 		window.showAndWait();
 		
-		return save;
+		return exit;
 	}
 	
 }

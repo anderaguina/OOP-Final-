@@ -32,7 +32,7 @@ public class Main extends Application {
 		// Init students list from db
 		ArrayList<Student> students = derby.select_students();
 			
-		// Init view
+		// Init view and pass the starting data
 		tabbedView = new TabbedView();
 		tabbedView.startView(primaryStage, students);
 	}

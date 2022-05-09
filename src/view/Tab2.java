@@ -20,12 +20,17 @@ public class Tab2 {
 		
 	public Tab2(Tab tab2, ArrayList<Student> students, Stage primaryStage) {
 		
+		// Create vBox
 		VBox tab2VBox = new VBox();
 				
+		// Set default option in comboBox
 		if (students.size() > 0) {
 			choiceBox.setValue(students.get(0).getId());	
 		}
 		
+		/*
+		 * Text field + labels
+		 */
 		Label moduleNameLabel = new Label("Module Name:");
 		TextField moduleNameTextField = new TextField();
 		
@@ -33,23 +38,25 @@ public class Tab2 {
 		TextField gradeTextField = new TextField();
 		
 		
-		
+		// Fill the comboBox
 		for (int i = 0; i < students.size(); i++) {
 			choiceBox.getItems().add(students.get(i).getId());
 		}
 		
+		// Add action button and functionality
 		Button registerMarkButton = new Button("Register Mark");
 		
 		registerMarkButton.setOnAction(e -> {
+			// Get inputs from view
 			String studentId = getChoice(choiceBox);
 			String module = moduleNameTextField.getText();
 			int grade = Integer.parseInt(gradeTextField.getText());
 			
-			
+			// Call controlelr with inputs to add a module to the db linked to the provided studentId
 			controller.registerMark(studentId, module, grade);
-			System.out.println(studentId);
 		});
 	    
+		// Add elements to vBox
 	    tab2VBox.getChildren().addAll(
 	    	choiceBox,
 	    	moduleNameLabel,
@@ -63,11 +70,19 @@ public class Tab2 {
 		
 	}
 	
+	/**
+	 * Get choice from combobox
+	 * @param choiceBox
+	 * @return
+	 */
 	private String getChoice(ChoiceBox<String> choiceBox) {
 		String studentId = choiceBox.getValue();
 		return studentId;
 	}
 	
+	/**
+	 * Update comboBox when new student is added
+	 */
 	public void updateChoiceBox() {
 		
 		ArrayList<Student> students = controller.getAllStudents();

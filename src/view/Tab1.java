@@ -1,5 +1,9 @@
 package view;
 
+import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import controller.Controller;
@@ -8,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
@@ -24,7 +29,7 @@ public class Tab1 {
 	
 	// I get tab2, tab3 and tab4 object in order to update the choice box in those classes when
 	// a new student is added from this view.
-	public Tab1(Tab tab1, Tab2 tab2, Tab3 tab3, Tab4 tab4, Stage primaryStage) {
+	public Tab1(Tab tab1, Tab2 tab2, Tab3 tab3, Tab4 tab4, Tab5 tab5, Stage primaryStage) {
 		
 		/*
 		 * Section Tittles
@@ -48,8 +53,9 @@ public class Tab1 {
 		Label idLabel = new Label("Student id:");
 		TextField idTextField = new TextField();
 		
+		// create a date picker
 		Label dobLabel = new Label("Date Of Birth:");
-		TextField dobTextField = new TextField();
+        DatePicker datePicker = new DatePicker();
 		
 		/*
 		 * Set default value for comboBox and fill the list
@@ -68,10 +74,23 @@ public class Tab1 {
 		 */
 		Button addButton = new Button("Add");
 		Button removeButton = new Button("Remove");
+		Button refreshListButton = new Button("Refresh");
 		Button exitButton = new Button("Exit");
 		
 		// Create text area to display entries
 		TextArea textArea = new TextArea();
+		
+		// Add events to buttons: ADD
+		refreshListButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {			
+				
+				// Update student list in text area
+				updateTextArea(textArea, controller.getAllStudents());
+			}
+			
+		});
 				
 		// Add events to buttons: ADD
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -84,16 +103,23 @@ public class Tab1 {
 				String firstName = nameTextField.getText();
 				String middleI = middleITextField.getText();
 				String lastName = lastNameTextField.getText();
-				String dob = dobTextField.getText();
 				
+				// Read datepicker value
+				LocalDate localDate = datePicker.getValue();
+								
+				// Convert from LocalDate to sql Date by adding the timezone
+				Date date = Date.valueOf(localDate);
+								
 				// Add student to db
-				controller.addStudent(id, firstName, middleI, lastName, dob);
+				controller.addStudent(id, firstName, middleI, lastName, date);
 				
 				
 				// Clear text Fields
 				idTextField.clear();
 				nameTextField.clear();
-				dobTextField.clear();
+				middleITextField.clear();
+				lastNameTextField.clear();
+				
 				
 				// Auto update student list in text area when the student is added
 				updateTextArea(textArea, controller.getAllStudents());
@@ -103,6 +129,7 @@ public class Tab1 {
 				tab2.updateChoiceBox();
 				tab3.updateChoiceBox();
 				tab4.updateChoiceBox();
+				tab5.updateChoiceBox();
 			}
 			
 		});
@@ -163,12 +190,13 @@ public class Tab1 {
     		idLabel,
     		idTextField,
     		dobLabel,
-    		dobTextField,
+    		datePicker,
     		addButton,
     		removeSection,
     		choiceBox,
     		removeButton,
     		listSection,
+    		refreshListButton,
     		textArea,
     		exitButton
 	    );
@@ -186,7 +214,7 @@ public class Tab1 {
 		StringBuilder fieldContent = new StringBuilder(""); 
 		for (int i = 0; i < students.size(); i++) {
 			fieldContent.append("Index: " + i + " | Student id: " + students.get(i).getId() + " | Student Name: "
-				+ students.get(i).getName().getName() + "\n");
+				+ students.get(i).getName().getName() + " | DOB: " + students.get(i).getDob() + "\n");
 		}
 		textArea.setText(fieldContent.toString());
 	}

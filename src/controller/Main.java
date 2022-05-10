@@ -29,8 +29,16 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		
+		/*
+		 * Check if db exists, if it doesn't create the db and the tables
+		 */
+		if (!derby.dbExists()) {
+			derby.createDatabase();	
+		}
 		// Init students list from db
 		ArrayList<Student> students = derby.select_students();
+		
+		
 			
 		// Init view and pass the starting data
 		tabbedView = new TabbedView();

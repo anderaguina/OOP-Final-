@@ -11,7 +11,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.sql.Date;
 
 import model.Student;
 import model.StudentModule;
@@ -31,13 +33,30 @@ public class Controller {
 	 * @param lastName
 	 * @param dob
 	 */
-	public void addStudent(String id, String name, String middleI, String lastName, String dob) {
+	public void addStudent(String id, String name, String middleI, String lastName, Date dob) {
 		
 		Name nameObj = new Name(name, middleI, lastName);
 		
 		Student student = new Student(id, nameObj, dob);
 				
 		derby.addStudent(student);
+	}
+	
+	/**
+	 * Update student (name and dob as id is primary key and cannot be changed without impacting the tables that use the pk as fk (student modules)
+	 * @param id
+	 * @param name
+	 * @param middleI
+	 * @param lastName
+	 * @param dob
+	 */
+	public void updateStudent(String id, String name, String middleI, String lastName, Date dob) {
+		
+		Name nameObj = new Name(name, middleI, lastName);
+		
+		Student student = new Student(id, nameObj, dob);
+				
+		derby.updateStudent(student);
 	}
 	
 	/**

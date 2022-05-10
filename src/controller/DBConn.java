@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javafx.collections.ObservableList;
 import model.Student;
@@ -19,12 +21,11 @@ public class DBConn {
 		Connection conn;
 		try {
 			conn = DriverManager.getConnection(url);
-			
+			return conn;
 		} catch (SQLException ex) {
-			conn = null;
-            ex.printStackTrace();
+			// System.out.println("EXCEPTION => " +ex);
+			return null;
         }
-		return conn;
 	}
 
 	/**
@@ -49,8 +50,10 @@ public class DBConn {
 			while (res.next()) {
 				// Create name object for the student
 				Name name = new Name(res.getString("firstName"), res.getString("middlenamei"), res.getString("lastName"));
+				
+				
 							
-				Student student = new Student(res.getString("studentID"), name, res.getString("dob"));
+				Student student = new Student(res.getString("studentID"), name, res.getDate("dob"));
 				
 				// Get modules for the student in this loop and append it to the student object
 				student.setModules(selectStudentModules(res.getString("studentID")));
@@ -90,8 +93,8 @@ public class DBConn {
 			while (res.next()) {
 				// Create name object for the student
 				Name name = new Name(res.getString("firstName"), res.getString("middlenamei"), res.getString("lastName"));
-							
-				student = new Student(res.getString("studentID"), name, res.getString("dob"));
+											
+				student = new Student(res.getString("studentID"), name, res.getDate("dob"));
 			}
 		     
 		    res.close();
@@ -179,10 +182,7 @@ public class DBConn {
 	 * Add students to db
 	 * @return
 	 */
-	public void addStudent(Student student) {
-		ArrayList<Student> students = new ArrayList<Student>();
-		// ResultSet res;
-		
+	public void addStudent(Student student) {		
 		try {
 			// Open connection to derby
 			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
@@ -191,7 +191,31 @@ public class DBConn {
 			
 			// Define query
 			String query = "INSERT INTO Students (STUDENTID, FIRSTNAME, MIDDLENAMEI, LASTNAME, DOB) VALUES"
-					+ "('"+ student.getId()+"', '"+ student.getName().getName() +"', '" + student.getName().getMiddleI() +"', '" + student.getName().getLastName() +"', '" +student.getDob() +"')";
+					+ "('"+ student.getId()+"', '"+ student.getName().getName() +"', '" + student.getName().getMiddleI() +"', '"
+					+ student.getName().getLastName() +"', '" +student.getDob() +"')";
+			
+			int insertedRows = sta.executeUpdate(query);
+			
+		} catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+		
+	}
+	
+	/**
+	 * Update student in db
+	 * @param student
+	 */
+	public void updateStudent(Student student) {
+		try {
+			// Open connection to derby
+			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
+			
+			Statement sta = conn.createStatement();
+			
+			// Define query
+			String query = "UPDATE Students set FIRSTNAME = '" + student.getName().getName() + "', MIDDLENAMEI = '" + student.getName().getMiddleI() +
+					"', LASTNAME = '" + student.getName().getLastName() + "', DOB = '" + student.getDob() +"' WHERE STUDENTID = '" + student.getId() + "'";
 			
 			int insertedRows = sta.executeUpdate(query);
 			
@@ -207,7 +231,7 @@ public class DBConn {
 	 */
 	public void deleteStudent(String studentId) {
 		ArrayList<Student> students = new ArrayList<Student>();
-		// ResultSet res;
+		
 		
 		try {
 			// Open connection to derby
@@ -250,5 +274,42 @@ public class DBConn {
             ex.printStackTrace();
         }
 		
+	}
+	
+	/**
+	 * Return true if we can connect to the db false if we can't
+	 * @return
+	 */
+	public boolean dbExists() {
+		Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students");
+				
+		if (conn != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Function to create the db and the tables
+	 */
+	public void createDatabase() {
+		
+		try {
+			// Create db and open connection to it
+			Connection conn = connectToDerbyDb("jdbc:derby:C://Users/aguin/Desktop/CIT/Students; create=True");
+			
+			Statement sta = conn.createStatement();
+
+			// Define query
+			String createStudentsQuery = "CREATE TABLE Students (studentID varchar(20), firstName varchar(10), middlenameI varchar(20), lastName varchar(20), dob DATE, PRIMARY KEY (studentID))";
+			String createStudentModulesQuery = "CREATE TABLE StudentModules (module varchar(20), grade INTEGER, studentID varchar(20) references students(studentID) ON DELETE CASCADE)";
+
+			int countStudents = sta.executeUpdate(createStudentsQuery);
+			int countStudentModules = sta.executeUpdate(createStudentModulesQuery);
+			
+		} catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 	}
 }

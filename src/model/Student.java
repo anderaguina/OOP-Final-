@@ -1,12 +1,14 @@
 package model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.sql.Date;
 
 public class Student implements Serializable {
 	 private String id;  
 	 // private String name;  
-	 private String dob;
+	 private Date dob;
 	 private Name name;
 	 private ArrayList<StudentModule> modules;
 	 
@@ -16,7 +18,7 @@ public class Student implements Serializable {
 	  * @param name
 	  * @param dob
 	  */
-	 public Student(String id, Name name, String dob) {
+	 public Student(String id, Name name, Date dob) {
 		 this.id = id;
 		 this.name = name;
 		 this.dob = dob;
@@ -59,7 +61,7 @@ public class Student implements Serializable {
 	 * return DOB for student
 	 * @return
 	 */
-	public String getDob() {
+	public Date getDob() {
 		return dob;
 	}
 	

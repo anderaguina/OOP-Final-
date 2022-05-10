@@ -20,6 +20,7 @@ public class TabbedView {
 	private Tab2 fillTab2;
 	private Tab3 fillTab3;
 	private Tab4 fillTab4;
+	private Tab5 fillTab5;
 	
 	public void startView(Stage primaryStage, ArrayList<Student> students) {		
 		
@@ -36,11 +37,13 @@ public class TabbedView {
 			Tab tab2 = new Tab("Register Module");
 			Tab tab3 = new Tab("List All modules");
 			Tab tab4 = new Tab("Student Details");
+			Tab tab5 = new Tab("Update Student");
 			
 			tab1.setClosable(false);
 			tab2.setClosable(false);
 			tab3.setClosable(false);
 			tab4.setClosable(false);
+			tab5.setClosable(false);
 			
 			// Fill tab 2
 			fillTab2 = new Tab2(tab2, students, primaryStage);
@@ -52,8 +55,11 @@ public class TabbedView {
 			// Fill tab 4
 			fillTab4 = new Tab4(tab4, students, primaryStage);
 			
-			// Fill tab 1 (Goes third so I can use fillTab2 ,fillTab3 and fillTab4)
-			fillTab1 = new Tab1(tab1, fillTab2, fillTab3, fillTab4, primaryStage);
+			// Fill tab 5
+			fillTab5 = new Tab5(tab5, students, primaryStage);
+			
+			// Fill tab 1 (Goes third so I can use fillTab2 ,fillTab3, fillTab4 and fillTab5 to update the checkboxes)
+			fillTab1 = new Tab1(tab1, fillTab2, fillTab3, fillTab4, fillTab5, primaryStage);
 			
 			
 			// Add tabs to tab pane
@@ -61,6 +67,7 @@ public class TabbedView {
 			tabPane.getTabs().add(tab2);
 			tabPane.getTabs().add(tab3);
 			tabPane.getTabs().add(tab4);
+			tabPane.getTabs().add(tab5);
 			
 			
 			// Add tabPane to scene

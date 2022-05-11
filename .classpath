@@ -18,5 +18,11 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/aguin/Downloads/db-derby-10.15.2.0-bin/db-derby-10.15.2.0-bin/lib/derby.jar"/>
 	<classpathentry kind="lib" path="C:/Users/aguin/Downloads/db-derby-10.15.2.0-bin/db-derby-10.15.2.0-bin/lib/derbyclient.jar"/>
+	<classpathentry kind="lib" path="C:/Users/aguin/Downloads/Junit/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/aguin/Downloads/Junit/junit-4.13.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

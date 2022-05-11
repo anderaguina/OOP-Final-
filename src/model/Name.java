@@ -7,6 +7,15 @@ public class Name {
 	private String lastName;
 	
 	/**
+	 * Default empty constructor
+	 */
+	public Name() {
+		this.name = "";
+		this.middleI = "";
+		this.lastName = "";
+	}
+	
+	/**
 	 * Constructor to create a Name
 	 * @param name
 	 * @param middleI

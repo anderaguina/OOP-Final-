@@ -27,6 +27,10 @@ public class Tab1 {
 	protected ChoiceBox<String> choiceBox = new ChoiceBox<>();
 	private ArrayList<Student> students = controller.getAllStudents();
 	
+	public Tab1() {
+		
+	}
+	
 	// I get tab2, tab3 and tab4 object in order to update the choice box in those classes when
 	// a new student is added from this view.
 	public Tab1(Tab tab1, Tab2 tab2, Tab3 tab3, Tab4 tab4, Tab5 tab5, Stage primaryStage) {

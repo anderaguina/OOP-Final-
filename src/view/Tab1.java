@@ -79,12 +79,24 @@ public class Tab1 {
 		Button addButton = new Button("Add");
 		Button removeButton = new Button("Remove");
 		Button refreshListButton = new Button("Refresh");
+		Button heapMemoryButton = new Button("Heap Memory Test");
 		Button exitButton = new Button("Exit");
 		
 		// Create text area to display entries
 		TextArea textArea = new TextArea();
 		
-		// Add events to buttons: ADD
+		heapMemoryButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {			
+				
+				// Update student list in text area
+				controller.infiniteCollection();
+			}
+			
+		});
+		
+		// Refresh List button: 
 		refreshListButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -202,6 +214,7 @@ public class Tab1 {
     		listSection,
     		refreshListButton,
     		textArea,
+    		heapMemoryButton,
     		exitButton
 	    );
 		

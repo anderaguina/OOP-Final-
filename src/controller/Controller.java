@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.sql.Date;
 
 import model.Student;
@@ -107,5 +108,20 @@ public class Controller {
 		} else {
 			return derby.selectStudentModules(studentId);
 		}		
+	}
+	
+	public void infiniteCollection() {
+		Collection collection = new ArrayList();
+		
+		Name nameObj = new Name("Name", "Middle", "Last");
+		
+		java.util.Date date = new java.util.Date();
+		Date dob = new Date(date.getTime());
+		
+		Student student = new Student("id", nameObj, dob);
+		
+		while (true) {
+			collection.add(student);
+	    }
 	}
 }
